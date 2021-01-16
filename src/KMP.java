@@ -1,3 +1,4 @@
+import java.util.HashMap;
 
 public class KMP{
     // Function to implement KMP algorithm
@@ -46,6 +47,7 @@ public class KMP{
         }
         return next;
     }
+    
 
     // Program to implement KMP Algorithm in Java
     public static void main(String[] args) {
