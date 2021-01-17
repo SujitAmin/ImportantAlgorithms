@@ -1,60 +1,80 @@
 import java.util.HashMap;
 
 public class KMP{
-    // Function to implement KMP algorithm
-    public static boolean KMP(String X, String Y) {
-        // Base Case 1: Y is null or empty
-        if (Y == null || Y.length() == 0) {
-            System.out.println("Pattern occurs with shift 0");
-            return true;
-        }
 
-        // Base Case 2: X is null or X's length is less than that of Y's
-        if (X == null || Y.length() > X.length()) {
-            //System.out.println("Pattern not found");
-            return false;
-        }
+    int KMPSearch(String pat, String txt)  {
+        int M = pat.length();
+        int N = txt.length();
 
-        char[] chars = Y.toCharArray();
+        // create lps[] that will hold the longest
+        // prefix suffix values for pattern
+        int lps[] = new int[M];
+        int j = 0; // index for pat[]
 
-        // next[i] stores the index of next best partial match
-        int[] next = new int[Y.length() + 1];
-        next = computeLPS(chars, next, Y.length());
+        // Preprocess the pattern (calculate lps[]
+        // array)
+        computeLPSArray(pat, M, lps);
 
-        for (int i = 0, j = 0; i < X.length(); i++) {
-            if (j < Y.length() && X.charAt(i) == Y.charAt(j)) {
+        int i = 0; // index for txt[]
+        while (i < N) {
+            if (pat.charAt(j) == txt.charAt(i)) {
                 j++;
-                if (j == Y.length()) {
-                    //System.out.println("Pattern occurs with shift " + (i - j + 1));
-                    return true;
+                i++;
+            }
+            if (j == M) {
+                //System.out.println("Found pattern "
+                //                  + "at index " + (i - j));
+                return i - j;
+            }
+
+            // mismatch after j matches
+            else if (i < N && pat.charAt(j) != txt.charAt(i)) {
+                // Do not match lps[0..lps[j-1]] characters,
+                // they will match anyway
+                if (j != 0)
+                    j = lps[j - 1];
+                else
+                    i = i + 1;
+            }
+        }
+        return -1;
+    }
+
+    void computeLPSArray(String pat, int M, int lps[]) {
+        // length of the previous longest prefix suffix
+        int len = 0;
+        int i = 1;
+
+
+        // the loop calculates lps[i] for i = 1 to M-1
+        while (i < M) {
+            if (pat.charAt(i) == pat.charAt(len)) {
+                len++;
+                lps[i] = len;
+                i++;
+            } else // (pat[i] != pat[len])
+            {
+                // This is tricky. Consider the example.
+                // AAACAAAA and i = 7. The idea is similar
+                // to search step.
+                if (len != 0) {
+                    len = lps[len - 1];
+                    // Also, note that we do not increment
+                    // i here
+                } else // if (len == 0)
+                {
+                    lps[i] = len;
+                    i++;
                 }
             }
-            else if (j > 0) {
-                j = next[j];
-                i--;    // since i will be incremented in next iteration
-            }
         }
-        return false;
     }
-
-    static int[] computeLPS(char[] chars, int[] next , int length){
-        for (int i = 1; i < length; i++)  {
-            int j = next[i + 1];
-            while (j > 0 && chars[j] != chars[i])
-                j = next[j];
-            if (j > 0 || chars[j] == chars[i])
-                next[i + 1] = j + 1;
-        }
-        return next;
-    }
-    
-
-    // Program to implement KMP Algorithm in Java
+        // Program to implement KMP Algorithm in Java
     public static void main(String[] args) {
         String text = "ABCABAABCABAC";
         String pattern = "BAC";//"CAB";
-
-        System.out.println(KMP(text, pattern));;
+        KMP kmp = new KMP();
+        System.out.println(kmp.KMPSearch(pattern, text));;
     }
 }
 
