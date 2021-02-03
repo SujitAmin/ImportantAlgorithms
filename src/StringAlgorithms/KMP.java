@@ -1,4 +1,4 @@
-import java.util.HashMap;
+package StringAlgorithms;
 
 public class KMP{
 
@@ -69,7 +69,8 @@ public class KMP{
             }
         }
     }
-        // Program to implement KMP Algorithm in Java
+
+        // Program to implement StringAlgorithms.KMP Algorithm in Java
     public static void main(String[] args) {
         String text = "ABCABAABCABAC";
         String pattern = "BAC";//"CAB";
