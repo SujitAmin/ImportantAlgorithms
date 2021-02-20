@@ -1,8 +1,8 @@
-package FastIOJava;
+package TemplatesForCompetitiveProgramming.FastIOJava;
 
 import java.io.*;
 //fastest....
-public class ReaderClass  {
+public class FastIO {
     static class Reader {
         final private int BUFFER_SIZE = 1 << 16;
         private DataInputStream din;

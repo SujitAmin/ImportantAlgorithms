@@ -1,65 +1,38 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class Solution {
-    public static void main(String[] args) {
-        String text = "ABCABAABCABAC";
-        String pattern = "BAC";
-        System.out.println(KMP(text, pattern));
+class Solution {
+    public int maximizeSweetness(int[] sweetness, int noOfCuts) {
+        int start = 0;
+        int end = Arrays.stream(sweetness).sum()/(noOfCuts + 1);
+        start = binarySearch(sweetness, noOfCuts, start, end);
+        return start;
     }
 
-    public static boolean KMP(String text, String pattern) {
-        int countPattern = pattern.length();
-        int countText = text.length();
-
-        int[] lps = new int[countPattern];
-        int j = 0;
-        int i = 0;
-        computeLPSS(pattern, lps ,countPattern);
-
-        while (i < countText) {
-            if(pattern.charAt(j) == text.charAt(i)) {
-                j++;
-                i++;
-            }
-
-            if(j == countPattern) {
-                System.out.println("Found pattern "
-                        + "at index " + (i - j));
-                j = lps[j - 1];
-                return true;
-            }
-            else if (i < countText && pattern.charAt(j) != text.charAt(i)) {
-                // Do not match lps[0..lps[j-1]] characters,
-                // they will match anyway.
-                if(j != 0) {
-                    j = lps[j - 1];
-                } else {
-                    i = i + 1;
-                }
-            }
-        }
-        return false;
-    }
-
-    private static void computeLPSS(String pattern, int[] lps, int countPattern) {
-        int len = 0;
-        int i = 1;
-        lps[0] = 0;
-
-        while(i < countPattern) {
-            if(pattern.charAt(i) == pattern.charAt(len)) {
-                len++;
-                lps[i] = len;
-                i++;
+    private int binarySearch(int[] sweetness, int noOfCuts, int start, int end) {
+        while(start < end) {
+            int mid = (start + end + 1)/2;
+            if(canSplit(sweetness, mid, noOfCuts)) {
+                start = mid;
             } else {
-                if(len != 0) {
-                    len = lps[len - 1];
-                } else {
-                    lps[i] = 0;
-                    i++;
-                }
+                end = mid - 1;
             }
         }
+        return start;
     }
+
+    private boolean canSplit(int[] sweetness, int mid, int noOfCuts) {
+        int sum = 0;
+        int count = 0;
+
+        for(int sweet : sweetness) {
+            sum = sum + sweet;
+            if(sum >= mid) {
+                sum = 0;
+                count++;
+            }
+        }
+        return count >= noOfCuts + 1;
+    }
+
+
 }

@@ -60,6 +60,7 @@ public class UnionFindByRank {
         int vertices = unionFindByRank.noOfVertices;
         int edges = unionFindByRank.noOfEdges;
 
+        //node array stores rank , parent
         Node[] nodes = new Node[vertices];
 
         for(int v = 0; v < vertices; v++) {
@@ -93,6 +94,7 @@ public class UnionFindByRank {
         int edges = 3;
         UnionFindByRank graph = new UnionFindByRank(vertices, edges);
 
+        //make an edge array
         // add edge 0 - 1
         graph.edgeArray[0].source = 0;
         graph.edgeArray[0].destination = 1;
